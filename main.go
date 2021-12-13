@@ -9,8 +9,11 @@ package main
 import (
 	"fmt"
 	n2w "goconvert/num2words"
+	"goconvert/utils"
 )
 
 func main() {
-	fmt.Println(n2w.Num2Words(n2w.Pow(n2w.New(10), n2w.New(65)), true))
+	num := n2w.Pow(n2w.New(10), n2w.New(606))
+	utils.PrintNumber(num)
+	fmt.Println(n2w.Num2Words(num, true))
 }

@@ -9,7 +9,6 @@
 package num2words
 
 import (
-	"fmt"
 	"math/big"
 )
 
@@ -36,8 +35,9 @@ var more = []string{
 	"vigintillion",		// vigintillion is 10^63
 }
 
-// centillion is 10^303, need to manage the gap b/w vigintillion & this
-var final = "centillion"				// nothing defined after this
+// cent is 10^303, need to manage the gap b/w vigintillion & this
+var vigin = "vigintillion"			// nothing defined b/w this & cent
+var cent = "centillion"				// nothing defined after this
 
 // 1,234,567,890,123,456,789
 
@@ -57,12 +57,49 @@ func Num2Words(num *big.Int, sep bool) string {
 	} else if GreaterEqual(num, New(-19)) && LessEqual(num, Zero()) {
 		return "negative " + unique[Abs(num).Int64()]
 	}
-	pos := Abs(num)
 
-	// count up how many 3-digit groups there are
-	ndigits := countDigits(pos)
+	// init
+	ret := ""						// string to return
+	ndigits := countDigits(num)		// # of digits
+
+	// check for very large numbers
+	if Greater(ndigits, New(303)) {			// num > centillion
+		// break up the number
+		divisor := Pow(New(10), New(303))
+		left := Div(num, divisor)			// left most digits
+		right := Mod(num, divisor)			// right most digits < 10^303
+
+		// if right is zero, then Num2Words(right) is just vigintillion
+		if Equals(right, Zero()) {
+			ret += Num2Words(left, sep) + " " + cent
+		} else {
+			ret += Num2Words(left, sep) + " " + cent + ", " + Num2Words(right, sep)
+		}
+	} else if Greater(ndigits, New(63)) {	// num > vigintillion
+		// break up the number
+		divisor := Pow(New(10), New(63))
+		left := Div(num, divisor)			// left most digits
+		right := Abs(Mod(num, divisor))			// right most digits
+
+		// if right is zero, then Num2Words(right) is just vigintillion
+		if Equals(right, Zero()) {
+			ret += Num2Words(left, sep) + " " + vigin
+		} else {
+			ret += Num2Words(left, sep) + " " + vigin + ", " + Num2Words(right, sep)
+		}
+	} else {				// num < vigintillion
+		ret += convertNum(num, sep)
+	}
+
+	return ret
+}
+
+// used to convert nums < 10^303 (i.e. centillion or below)
+func convertNum(num *big.Int, sep bool) string {
+	// inits
+	pos := Abs(num)
+	ndigits := countDigits(num)
 	ngroups := Div(ndigits, New(3)).Int64() + 1
-	fmt.Println(ndigits, ngroups)
 
 	// separate into 3-digit groups
 	groups := make([]int64, 0)		// 3-digit groups won't need big.Int
@@ -70,33 +107,39 @@ func Num2Words(num *big.Int, sep bool) string {
 		groups = append(groups, Mod(pos, New(1000)).Int64())
 		pos.Div(pos, New(1000))
 	}
-	fmt.Println(groups)
 
 	// convert each of the groups
 	strgroups := make([]string, len(groups))
 	for i := 0; i < len(groups); i++ {
 		strgroups[i] = convertGroup(groups[i], sep)
 	}
-	fmt.Println(strgroups)
 
 	// assemble (and handle larger denominations than hundreds)
-	words := strgroups[0]
+	str := strgroups[0]
 	for i := int64(1); i < ngroups; i++ {
 		if groups[i] != 0 {
-			prefix := strgroups[i] + " " + more[i]
-			if len(words) != 0 {
-				prefix += addand(sep)
+			prefix := ""
+			// num is centillion or more (although, it's limited anyway)
+			if i >= 101 {
+				prefix = strgroups[i] + " " + cent
+			} else if i >= 22 {	// vigintillion < num < centillion
+				prefix = strgroups[i] + " " + vigin
+			} else {
+				prefix = strgroups[i] + " " + more[i]
 			}
-			words = prefix + words
+			if len(str) != 0 {
+				prefix += ", " //addand(sep)
+			}
+			str = prefix + str
 		}
 	}
 	
 	// set sign
 	if num.Sign() == -1 {
-		words = "negative " + words
+		str = "negative " + str
 	}
 
-	return words
+	return str
 }
 
 // this does the "hundreds" of whatever denom we're in
@@ -134,7 +177,7 @@ func convertGroup(group int64, sep bool) string {
 func countDigits(num *big.Int) *big.Int {
 	a := Copy(num)		// create deep copy of number so we don't modify the original
 	count := New(0)
-	for !Equal(a, New(0)) {	// int division guaranteed to hit zero
+	for !Equals(a, New(0)) {	// int division guaranteed to hit zero
 		a = Div(a, New(10))
 		count = Add(count, New(1))
 	}

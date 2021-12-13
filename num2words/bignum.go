@@ -24,7 +24,7 @@ func Copy(a *big.Int) *big.Int {
 }
 
 // COMPARISONS
-func Equal(a, b *big.Int) bool {
+func Equals(a, b *big.Int) bool {
 	return a.Cmp(b) == 0
 }
 
@@ -37,11 +37,11 @@ func Greater(a, b *big.Int) bool {
 }
 
 func LessEqual(a, b *big.Int) bool {
-	return Less(a, b) || Equal(a, b)
+	return Less(a, b) || Equals(a, b)
 }
 
 func GreaterEqual(a, b *big.Int) bool {
-	return Greater(a, b) || Equal(a, b)
+	return Greater(a, b) || Equals(a, b)
 }
 
 // MATHEMATICAL OPERATIONS
