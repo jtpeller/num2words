@@ -73,7 +73,7 @@ func Num2Words(num *big.Int, sep bool) string {
 		if Equals(right, Zero()) {
 			ret += Num2Words(left, sep) + " " + cent
 		} else {
-			ret += Num2Words(left, sep) + " " + cent + ", " + Num2Words(right, sep)
+			ret += Num2Words(left, sep) + " " + cent + addcomma(sep) + Num2Words(right, sep)
 		}
 	} else if Greater(ndigits, New(63)) {	// num > vigintillion
 		// break up the number
@@ -85,7 +85,7 @@ func Num2Words(num *big.Int, sep bool) string {
 		if Equals(right, Zero()) {
 			ret += Num2Words(left, sep) + " " + vigin
 		} else {
-			ret += Num2Words(left, sep) + " " + vigin + ", " + Num2Words(right, sep)
+			ret += Num2Words(left, sep) + " " + vigin + addcomma(sep) + Num2Words(right, sep)
 		}
 	} else {				// num < vigintillion
 		ret += convertNum(num, sep)
@@ -128,7 +128,7 @@ func convertNum(num *big.Int, sep bool) string {
 				prefix = strgroups[i] + " " + more[i]
 			}
 			if len(str) != 0 {
-				prefix += ", " //addand(sep)
+				prefix += addcomma(sep)
 			}
 			str = prefix + str
 		}
@@ -194,6 +194,13 @@ func addand(sep bool) string {
 func adddash(sep bool) string {
 	if sep {
 		return "-"
+	}
+	return " "
+}
+
+func addcomma(sep bool) string {
+	if sep {
+		return ", "
 	}
 	return " "
 }

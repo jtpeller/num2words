@@ -9,6 +9,7 @@ import (
 
 func TestNum2Words(t *testing.T) {
 	newnum := num2words.New
+	pow := num2words.Pow
 	
 	// test the uniques
 	t.Run("0", tester(newnum(0), false, "zero"))
@@ -23,10 +24,14 @@ func TestNum2Words(t *testing.T) {
 	t.Run("420", tester(newnum(420), false, "four hundred twenty"))
 	t.Run("810", tester(newnum(810), false, "eight hundred ten"))
 
-	// test more
+	// test up through int64
 	t.Run("1910", tester(newnum(1910), false, "one thousand nine hundred ten"))
 	t.Run("123456789", tester(newnum(123456789), false, "one hundred twenty three million four hundred fifty six thousand seven hundred eighty nine"))
 	t.Run("1000000000000000000", tester(newnum(1000000000000000000), false, "one quintillion"))
+
+	// test massive numbers
+	t.Run("10^25", tester(pow(newnum(10), newnum(25)), false, "ten septillion"))
+	t.Run("10^64", tester(pow(newnum(10), newnum(64)), false, "ten vigintillion"))
 }
 
 func TestNum2WordsWithSep(t *testing.T) {

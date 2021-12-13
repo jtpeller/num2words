@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-	num := n2w.Pow(n2w.New(10), n2w.New(606))
+	num := n2w.Pow(n2w.New(10), n2w.New(605))
 	utils.PrintNumber(num)
 	fmt.Println(n2w.Num2Words(num, true))
 }
