@@ -18,6 +18,8 @@ Then, import it:
 import "github.com/jtpeller/goconvert"
 ```
 
+You can test the package via `go test ./num2words_test`
+
 ## Contents
 
 - `test`
