@@ -2,7 +2,7 @@
 
 ## Overview
 
-golang conversion module for various conversions
+Converts a number to its English counterpart 
 
 ## Usage
 
