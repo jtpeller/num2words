@@ -1,2 +1,30 @@
 # goconvert
- golang conversion module for various conversions
+
+## Overview
+
+golang conversion module for various conversions
+
+## Usage
+
+Installation can be achieved via:
+
+```
+go get -u github.com/jtpeller/goconvert
+```
+
+Then, import it:
+
+```go
+import "github.com/jtpeller/goconvert"
+```
+
+## Contents
+
+- `test`
+    - `test.go` -- holds all test functions for the package
+- `bignum.go` -- holds needed wrappers for the big number package. Based on my repo at [gobig](https://github.com/jtpeller/gobig)
+- `go.mod` -- manages the module
+- `go.sum` -- manages any dependencies (which itself is managed by `go.mod`)
+- `num2words.go` -- implementation for converting numbers to their word representation (e.g. 5 => five)
+- `README.md` -- the file you're reading
+

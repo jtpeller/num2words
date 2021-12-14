@@ -1,9 +1,9 @@
 // ============================================================================
-// = num2words.go															  =
-// = 	Description: Converts a number to its English counterpart			  =
-// = 			This is unique because it allows arbitrary precision numbers  =
-// =	Based on: https://github.com/divan/num2words						  =
-// = 	Date: December 12, 2021												  =
+// = num2words.go
+// = 	Description: Converts a number to its English counterpart
+// = 			Allows arbitrary precision numbers
+// =	Based on: https://github.com/divan/num2words
+// = 	Date: December 12, 2021
 // ============================================================================
 
 package num2words
@@ -52,10 +52,10 @@ var cent = "centillion"				// nothing defined after this
  */
 func Num2Words(num *big.Int, sep bool) string {
 	// base cases
-	if GreaterEqual(num, Zero()) && LessEqual(num, New(19)) {
+	if greaterEqual(num, zero()) && lessEqual(num, newint(19)) {
 		return unique[num.Int64()]
-	} else if GreaterEqual(num, New(-19)) && LessEqual(num, Zero()) {
-		return "negative " + unique[Abs(num).Int64()]
+	} else if greaterEqual(num, newint(-19)) && lessEqual(num, zero()) {
+		return "negative " + unique[abs(num).Int64()]
 	}
 
 	// init
@@ -63,26 +63,26 @@ func Num2Words(num *big.Int, sep bool) string {
 	ndigits := countDigits(num)		// # of digits
 
 	// check for very large numbers
-	if Greater(ndigits, New(303)) {			// num > centillion
+	if greater(ndigits, newint(303)) {			// num > centillion
 		// break up the number
-		divisor := Pow(New(10), New(303))
-		left := Div(num, divisor)			// left most digits
-		right := Mod(num, divisor)			// right most digits < 10^303
+		divisor := pow(newint(10), newint(303))
+		left := div(num, divisor)			// left most digits
+		right := mod(num, divisor)			// right most digits < 10^303
 
 		// if right is zero, then Num2Words(right) is just vigintillion
-		if Equals(right, Zero()) {
+		if equals(right, zero()) {
 			ret += Num2Words(left, sep) + " " + cent
 		} else {
 			ret += Num2Words(left, sep) + " " + cent + addcomma(sep) + Num2Words(right, sep)
 		}
-	} else if Greater(ndigits, New(63)) {	// num > vigintillion
+	} else if greater(ndigits, newint(63)) {	// num > vigintillion
 		// break up the number
-		divisor := Pow(New(10), New(63))
-		left := Div(num, divisor)			// left most digits
-		right := Abs(Mod(num, divisor))			// right most digits
+		divisor := pow(newint(10), newint(63))
+		left := div(num, divisor)			// left most digits
+		right := abs(mod(num, divisor))			// right most digits
 
 		// if right is zero, then Num2Words(right) is just vigintillion
-		if Equals(right, Zero()) {
+		if equals(right, zero()) {
 			ret += Num2Words(left, sep) + " " + vigin
 		} else {
 			ret += Num2Words(left, sep) + " " + vigin + addcomma(sep) + Num2Words(right, sep)
@@ -97,15 +97,15 @@ func Num2Words(num *big.Int, sep bool) string {
 // used to convert nums < 10^303 (i.e. centillion or below)
 func convertNum(num *big.Int, sep bool) string {
 	// inits
-	pos := Abs(num)
+	pos := abs(num)
 	ndigits := countDigits(num)
-	ngroups := Div(ndigits, New(3)).Int64() + 1
+	ngroups := div(ndigits, newint(3)).Int64() + 1
 
 	// separate into 3-digit groups
 	groups := make([]int64, 0)		// 3-digit groups won't need big.Int
 	for i := int64(0); i < ngroups; i++ {
-		groups = append(groups, Mod(pos, New(1000)).Int64())
-		pos.Div(pos, New(1000))
+		groups = append(groups, mod(pos, newint(1000)).Int64())
+		pos.Div(pos, newint(1000))
 	}
 
 	// convert each of the groups
@@ -175,11 +175,11 @@ func convertGroup(group int64, sep bool) string {
 }
 
 func countDigits(num *big.Int) *big.Int {
-	a := Copy(num)		// create deep copy of number so we don't modify the original
-	count := New(0)
-	for !Equals(a, New(0)) {	// int division guaranteed to hit zero
-		a = Div(a, New(10))
-		count = Add(count, New(1))
+	a := copy(num)		// create deep copy of number so we don't modify the original
+	count := newint(0)
+	for !equals(a, newint(0)) {	// int division guaranteed to hit zero
+		a = div(a, newint(10))
+		count = add(count, newint(1))
 	}
 	return count
 }
