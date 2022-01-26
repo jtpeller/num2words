@@ -1,4 +1,4 @@
-# goconvert
+# num2words
 
 ## Overview
 
@@ -9,13 +9,13 @@ Converts a number to its English counterpart
 Installation can be achieved via:
 
 ```
-go get -u github.com/jtpeller/goconvert
+go get -u github.com/jtpeller/num2words
 ```
 
 Then, import it:
 
 ```go
-import "github.com/jtpeller/goconvert"
+import "github.com/jtpeller/num2words"
 ```
 
 You can test the package via `go test ./num2words_test`
