@@ -53,6 +53,10 @@ func TestNum2WordsWithSep(t *testing.T) {
 	t.Run("1910", testn2w(gb.New(1910), true, "one thousand, nine hundred and ten"))
 	t.Run("123456789", testn2w(gb.New(123456789), true, "one hundred and twenty-three million, four hundred and fifty-six thousand, seven hundred and eighty-nine"))
 	t.Run("1000000000000000000", testn2w(gb.New(1000000000000000000), true, "one quintillion"))
+
+	// test massive numbers
+	t.Run("10^25", testn2w(gb.Pow(gb.New(10), gb.New(25)), true, "ten septillion"))
+	t.Run("10^64", testn2w(gb.Pow(gb.New(10), gb.New(64)), true, "ten vigintillion"))
 }
 
 // runs the test and handles the call
@@ -61,7 +65,7 @@ func testn2w(num *big.Int, f bool, expected string) func(*testing.T) {
 	return func(t *testing.T) {
 		actual := n2w(num, f)
 		if actual != expected {
-			t.Error(fmt.Sprintf("Expected: %s, got: %s", expected, actual))
+			t.Errorf(fmt.Sprintf("Expected: %s, got: %s", expected, actual))
 		}
 	}
 }
