@@ -1,4 +1,4 @@
-module num2words
+module github.com/jtpeller/num2words
 
 go 1.15
 
