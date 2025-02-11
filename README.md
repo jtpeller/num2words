@@ -1,5 +1,10 @@
 # num2words
 
+[![Go Reference](https://pkg.go.dev/badge/github.com/jtpeller/num2words.svg)](https://pkg.go.dev/github.com/jtpeller/num2words)
+[![Go Report Card](https://goreportcard.com/badge/github.com/jtpeller/num2words)](https://goreportcard.com/report/github.com/jtpeller/num2words)
+[![Release](https://img.shields.io/github/release/jtpeller/num2words.svg?style=flat-square)](https://github.com/jtpeller/num2words/releases)
+![GitHub License](https://img.shields.io/github/license/jtpeller/num2words)
+
 ## Overview
 
 Converts a number to its English counterpart.

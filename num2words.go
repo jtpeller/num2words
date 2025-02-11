@@ -14,7 +14,7 @@ import (
 
 var unique = []string{
 	"zero", "one", "two", "three", "four", "five",
-	"six", "seven", "eight", "nine", "ten", 
+	"six", "seven", "eight", "nine", "ten",
 	"eleven", "twelve", "thirteen", "fourteen", "fifteen",
 	"sixteen", "seventeen", "eighteen", "nineteen",
 }
@@ -26,24 +26,24 @@ var tens_words = []string{
 // 64-bit ints go up to quintillion, big.Int is arbitrarily large
 // IMPORTANT: this uses the short-scale system for large numbers
 var more = []string{
-	"hundred", "thousand", "million", "billion", "trillion", 
+	"hundred", "thousand", "million", "billion", "trillion",
 	"quadrillion", "quintillion", "sextillion", "septillion",
-	"octillion", "nonillion",	"decillion", "undecillion",
+	"octillion", "nonillion", "decillion", "undecillion",
 	"duodecillion", "tredecillion", "quattuordecillion",
-	"quindecillion", "sexdecillion", "septendecillion", 
+	"quindecillion", "sexdecillion", "septendecillion",
 	"octodecillion", "novemdecillion",
-	"vigintillion",		// vigintillion is 10^63
+	"vigintillion", // vigintillion is 10^63
 }
 
 // cent is 10^303, need to manage the gap b/w vigintillion & this
-var vigin = "vigintillion"			// nothing defined b/w this & cent
-var cent = "centillion"				// nothing defined after this
+var vigin = "vigintillion" // nothing defined b/w this & cent
+var cent = "centillion"    // nothing defined after this
 
 // 1,234,567,890,123,456,789
 
 /**
  * Num2Words converts a word to its English counterpart.
- *  For instance, 6 converts to six. 
+ *  For instance, 6 converts to six.
  *  235 can convert to two hundred thirty five if sep is false
  *  or two hundred and thirty-five if sep is true.
  * @param num 	number to convert
@@ -59,15 +59,15 @@ func Num2Words(num *big.Int, sep bool) string {
 	}
 
 	// init
-	ret := ""						// string to return
-	ndigits := countDigits(num)		// # of digits
+	ret := ""                   // string to return
+	ndigits := countDigits(num) // # of digits
 
 	// check for very large numbers
-	if greater(ndigits, newint(303)) {			// num > centillion
+	if greater(ndigits, newint(303)) { // num > centillion
 		// break up the number
 		divisor := pow(newint(10), newint(303))
-		left := div(num, divisor)			// left most digits
-		right := mod(num, divisor)			// right most digits < 10^303
+		left := div(num, divisor)  // left most digits
+		right := mod(num, divisor) // right most digits < 10^303
 
 		// if right is zero, then Num2Words(right) is just vigintillion
 		if equals(right, zero()) {
@@ -75,11 +75,11 @@ func Num2Words(num *big.Int, sep bool) string {
 		} else {
 			ret += Num2Words(left, sep) + " " + cent + addcomma(sep) + Num2Words(right, sep)
 		}
-	} else if greater(ndigits, newint(63)) {	// num > vigintillion
+	} else if greater(ndigits, newint(63)) { // num > vigintillion
 		// break up the number
 		divisor := pow(newint(10), newint(63))
-		left := div(num, divisor)			// left most digits
-		right := abs(mod(num, divisor))			// right most digits
+		left := div(num, divisor)       // left most digits
+		right := abs(mod(num, divisor)) // right most digits
 
 		// if right is zero, then Num2Words(right) is just vigintillion
 		if equals(right, zero()) {
@@ -87,7 +87,7 @@ func Num2Words(num *big.Int, sep bool) string {
 		} else {
 			ret += Num2Words(left, sep) + " " + vigin + addcomma(sep) + Num2Words(right, sep)
 		}
-	} else {				// num < vigintillion
+	} else { // num < vigintillion
 		ret += convertNum(num, sep)
 	}
 
@@ -102,7 +102,7 @@ func convertNum(num *big.Int, sep bool) string {
 	ngroups := div(ndigits, newint(3)).Int64() + 1
 
 	// separate into 3-digit groups
-	groups := make([]int64, 0)		// 3-digit groups won't need big.Int
+	groups := make([]int64, 0) // 3-digit groups won't need big.Int
 	for i := int64(0); i < ngroups; i++ {
 		groups = append(groups, mod(pos, newint(1000)).Int64())
 		pos.Div(pos, newint(1000))
@@ -122,7 +122,7 @@ func convertNum(num *big.Int, sep bool) string {
 			// num is centillion or more (although, it's limited anyway)
 			if i >= 101 {
 				prefix = strgroups[i] + " " + cent
-			} else if i >= 22 {	// vigintillion < num < centillion
+			} else if i >= 22 { // vigintillion < num < centillion
 				prefix = strgroups[i] + " " + vigin
 			} else {
 				prefix = strgroups[i] + " " + more[i]
@@ -133,7 +133,7 @@ func convertNum(num *big.Int, sep bool) string {
 			str = prefix + str
 		}
 	}
-	
+
 	// set sign
 	if num.Sign() == -1 {
 		str = "negative " + str
@@ -149,7 +149,7 @@ func convertGroup(group int64, sep bool) string {
 	// init
 	hundreds := group / 100
 	rem := group % 100
-	out := ""			// string to return
+	out := "" // string to return
 
 	// convert hundreds to words
 	if hundreds != 0 {
@@ -160,7 +160,7 @@ func convertGroup(group int64, sep bool) string {
 	}
 
 	// compute tens to words
-	tens := rem / 10	// get how many tens
+	tens := rem / 10 // get how many tens
 	ones := rem % 10
 	if tens >= 2 {
 		out += tens_words[tens]
@@ -175,9 +175,9 @@ func convertGroup(group int64, sep bool) string {
 }
 
 func countDigits(num *big.Int) *big.Int {
-	a := copy(num)		// create deep copy of number so we don't modify the original
+	a := copy(num) // create deep copy of number so we don't modify the original
 	count := newint(0)
-	for !equals(a, newint(0)) {	// int division guaranteed to hit zero
+	for !equals(a, newint(0)) { // int division guaranteed to hit zero
 		a = div(a, newint(10))
 		count = add(count, newint(1))
 	}

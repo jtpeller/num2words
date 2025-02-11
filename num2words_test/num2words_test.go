@@ -3,8 +3,9 @@ package num2words_test
 import (
 	"fmt"
 	"math/big"
-	n2w "num2words"
 	"testing"
+
+	n2w "github.com/jtpeller/num2words"
 
 	gb "github.com/jtpeller/gobig"
 )
@@ -65,8 +66,7 @@ func testn2w(num *big.Int, f bool, expected string) func(*testing.T) {
 	return func(t *testing.T) {
 		actual := n2w(num, f)
 		if actual != expected {
-			t.Errorf(fmt.Sprintf("Expected: %s, got: %s", expected, actual))
+			t.Errorf("%s", fmt.Sprintf("Expected: %s, got: %s", expected, actual))
 		}
 	}
 }
-
